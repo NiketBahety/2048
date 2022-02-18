@@ -1,0 +1,71 @@
+* {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+.scoreboard {
+  margin: 5px auto 0 auto;
+  width: 40vw;
+}
+.scoreboard .title {
+  font-size: 18px;
+}
+.scoreboard .score {
+  font-size: 20px;
+  font-weight: bold;
+}
+.grid {
+  margin: auto;
+  background-color: #ccc;
+  width: 40vw;
+  height: 40vw;
+  display: grid;
+  grid-template-columns: repeat(4, 9vw);
+  gap: 1vw;
+  padding-left: 1vw;
+  padding-top: 1vw;
+  padding-bottom: 1vw;
+  border-radius: 5px;
+}
+.cell {
+  width: 9vw;
+  height: 9vw;
+  background-color: rgb(0, 58, 41);
+  border-radius: 4px;
+  border-top-right-radius: 15px;
+  border-bottom-left-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.number {
+  position: absolute;
+  width: 90%;
+  height: 90%;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: tomato;
+  border-radius: 4px;
+  border-top-right-radius: 12px;
+  border-bottom-left-radius: 12px;
+  z-index: 2;
+  transition: 0.2s ease-in-out;
+}
+.victory {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  backdrop-filter: blur(20px);
+  justify-content: center;
+  align-items: center;
+  font-size: 70px;
+  color: white;
+  display: none;
+}

@@ -4,8 +4,105 @@ let grid_num = [
   [0, 0, 0, 0],
   [0, 0, 0, 0],
 ];
+
 let old_grid;
 let score = 0;
+
+function getPoints(grid) {
+  let array = [];
+  for (let i = 0; i < 4; i++) {
+    let a = [];
+    for (let j = 0; j < 4; j++) {
+      let arr = [];
+      if (grid[i][j] != 0) {
+        arr.push(i);
+        arr.push(j);
+        arr.push(grid[i][j]);
+        a.push(arr);
+      }
+    }
+    array.push(a);
+  }
+  return array;
+}
+
+function resizeArray(arr1, arr2) {
+  console.table(arr1);
+  console.table(arr2);
+
+  let x = [];
+  for (let i = 0; i < 4; i++) {
+    if (arr1[i].length != 0) {
+      if (arr1[i].length === arr2[i].length) console.log(true);
+      else {
+        console.log(false);
+        for (let k = 0; k < arr1[i].length - 1; k++) {
+          if (arr1[i][k][2] === arr1[i][k + 1][2]) {
+            arr2[i].splice(k, 0, arr2[i][k]);
+            k++;
+          }
+        }
+        console.log(arr1[i]);
+        console.log(arr2[i]);
+      }
+      for (let j = 0; j < arr1[i].length; j++) {
+        let y = 0;
+        y = Math.abs(arr1[i][j][1] - arr2[i][j][1]) * 124;
+        if (y != 0) y = y * -1;
+        y = y + "%";
+        x.push(y);
+      }
+    }
+  }
+  console.log(x);
+  return x;
+}
+
+function applyTransitionLeft(x, old) {
+  console.log(old);
+  console.log(x);
+  let count = 0;
+  let cells = document.getElementsByClassName("number");
+  for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < 4; j++) {
+      let cell = cells[count];
+      if (old[i][j] != 0) {
+        console.log(cell);
+        console.log(`translateX(${x[count]})`);
+        cell.style.transform = `translateX(${x[count]})`;
+        count++;
+      }
+    }
+  }
+  setTimeout(function () {
+    addRandom();
+    createGrid();
+  }, 200);
+}
+
+function applyTransitionRight(x, old) {
+  console.log(old);
+  console.log(x);
+  let count = 0;
+  let cells = document.getElementsByClassName("number");
+  for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < 4; j++) {
+      let cell = cells[count];
+      if (old[i][j] != 0) {
+        console.log(cell);
+        let a = x[count].split("%")[0] * -1 + "%";
+        console.log(a);
+        console.log(`translateX(${a})`);
+        cell.style.transform = `translateX(${a})`;
+        count++;
+      }
+    }
+  }
+  setTimeout(function () {
+    addRandom();
+    createGrid();
+  }, 200);
+}
 
 function applyFontSize(el, val) {
   let size = new Map([
@@ -59,6 +156,7 @@ function createGrid() {
   for (let i = 0; i < grid_num.length; i++) {
     for (let j = 0; j < grid_num.length; j++) {
       if (grid_num[i][j] != 0) {
+        els[4 * i + j].innerHTML = "";
         els[4 * i + j].append(createElement(grid_num[i][j]));
       } else els[4 * i + j].innerHTML = "";
     }
@@ -110,6 +208,7 @@ function gameLost() {
           grid_num[i][j] === grid_num[i][j + 1]
         ) {
           count++;
+          break;
         }
       }
     }
@@ -119,7 +218,8 @@ function gameLost() {
 }
 
 function leftMove(e) {
-  old_grid = grid_num;
+  old_grid = grid_num.slice(0);
+  let arr = getPoints(old_grid);
   let zero = [];
   let one = [];
   for (let i = 0; i < 4; i++) {
@@ -162,13 +262,20 @@ function leftMove(e) {
     grid_num[i] = one[i].concat(zero[i]);
   }
 
-  addRandom();
-  createGrid();
+  let new_arr = getPoints(grid_num);
+
+  let x = resizeArray(arr, new_arr);
+  console.log(x);
+  applyTransitionLeft(x, old_grid);
+
+  // addRandom();
+  // createGrid();
   document.getElementsByClassName("score")[0].innerHTML = score;
 }
 
 function rightMove(e) {
-  old_grid = grid_num;
+  old_grid = grid_num.slice(0);
+  let arr = getPoints(old_grid);
   let zero = [];
   let one = [];
   for (let i = 0; i < 4; i++) {
@@ -210,13 +317,21 @@ function rightMove(e) {
     grid_num[i] = zero[i].concat(one[i]);
   }
 
-  addRandom();
-  createGrid();
+  let new_arr = getPoints(grid_num);
+
+  let x = resizeArray(arr, new_arr);
+  console.log(x);
+  applyTransitionRight(x, old_grid);
+
+  // addRandom();
+  // createGrid();
   document.getElementsByClassName("score")[0].innerHTML = score;
 }
 
 function upMove(e) {
   old_grid = grid_num;
+  let arr = getPoints(old_grid);
+  console.table(arr);
   let zero = [];
   let one = [];
   for (let i = 0; i < 4; i++) {
@@ -266,6 +381,8 @@ function upMove(e) {
     }
   }
 
+  console.table(getPoints(grid_num));
+
   addRandom();
   createGrid();
   document.getElementsByClassName("score")[0].innerHTML = score;
@@ -273,6 +390,8 @@ function upMove(e) {
 
 function downMove(e) {
   old_grid = grid_num;
+  let arr = getPoints(old_grid);
+  console.table(arr);
   let zero = [];
   let one = [];
   for (let i = 0; i < 4; i++) {
@@ -320,6 +439,8 @@ function downMove(e) {
       grid_num[j][i] = final[i][j];
     }
   }
+
+  console.table(getPoints(grid_num));
 
   addRandom();
   createGrid();
